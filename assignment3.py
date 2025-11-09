@@ -67,3 +67,38 @@ def main():
 
     print("\n")
     print("Program ended!")
+
+
+def read_tokens_from_file(file_path):
+    """Read the API Token from the configuration file, skipping blank lines and comments"""
+    tokens = {"GITHUB_TOKEN": "", "SLACK_BEARER_TOKEN": ""}
+
+    try:
+        # Open and read the token file
+        with open(file_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+    except FileNotFoundError:
+        print("Error: The token file does not exist")
+
+    # Extract tokens from file lines
+    for line in lines:
+        if "=" in line:
+            key, value = line.split("=", 1)
+            key = key.strip()
+            value = value.strip()
+            if key == "GITHUB_TOKEN":
+                tokens["GITHUB_TOKEN"] = value
+            elif key == "SLACK_BEARER_TOKEN":
+                tokens["SLACK_BEARER_TOKEN"] = value
+
+    # Check for missing tokens
+    if not tokens["GITHUB_TOKEN"] or not tokens["SLACK_BEARER_TOKEN"]:
+        print("Error: The Token is missing in the configuration file！")
+        return None
+
+    return tokens
+
+
+token_dict = read_tokens_from_file(TOKEN_FILE)
+GITHUB_TOKEN = token_dict.get("GITHUB_TOKEN")
+SLACK_BEARER_TOKEN = token_dict.get("SLACK_BEARER_TOKEN")
