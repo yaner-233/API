@@ -130,3 +130,28 @@ def search_github_repository(query, per_page=3):
     except RequestException:
         print("GitHub request error")
         return None
+
+
+def get_slack_workspace_name():
+    """Call the Slack API to get the workspace name"""
+    slack_url = "https://slack.com/api/auth.test"
+    headers = {"Authorization": f"Bearer {SLACK_BEARER_TOKEN}"}
+
+    try:
+        # Send POST request to Slack API
+        response = requests.post(slack_url, headers=headers, timeout=10)
+        # Check HTTP response status
+        response.raise_for_status()
+        # Parse response to JSON
+        data = response.json()
+        # Return workspace name if request succeeds
+        if data.get("ok"):
+            return data.get("team")
+        print("Slack workspace query failed")
+        return None
+    except RequestException:
+        print("Error in Slack request")
+        return None
+
+
+
