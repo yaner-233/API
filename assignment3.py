@@ -102,3 +102,31 @@ def read_tokens_from_file(file_path):
 token_dict = read_tokens_from_file(TOKEN_FILE)
 GITHUB_TOKEN = token_dict.get("GITHUB_TOKEN")
 SLACK_BEARER_TOKEN = token_dict.get("SLACK_BEARER_TOKEN")
+
+
+def search_github_repository(query, per_page=3):
+    """Call GitHub Search API to fetch repository data."""
+    github_url = "https://api.github.com/search/repositories"
+    params = {"q": query, "per_page": per_page}
+    headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+
+    try:
+        response = requests.get(github_url, headers=headers, params=params, timeout=10)
+        repository_data = response.json()
+
+        # Filter needed repository info
+        repository_list = []
+        for repository in repository_data.get("items", []):
+            repository_information = {
+                "name": repository["name"],
+                "stargazers_count": repository["stargazers_count"],
+                "description": repository.get("description", "No description available"),
+                "url": repository["html_url"],
+                "language": repository.get("language", "Unknown")
+            }
+            repository_list.append(repository_information)
+        return repository_list
+
+    except RequestException:
+        print("GitHub request error")
+        return None
