@@ -154,4 +154,24 @@ def get_slack_workspace_name():
         return None
 
 
+def get_slack_channels(limit=10):
+    """Get Slack channel list via conversations.list API"""
+    headers = {"Authorization": f"Bearer {SLACK_BEARER_TOKEN}"}
+    params = {"types": "public_channel,private_channel", "limit": limit, "exclude_archived": True}
 
+    try:
+        # Send GET request to Slack API
+        response = requests.get("https://slack.com/api/conversations.list",
+                                headers=headers, params=params, timeout=10)
+        # Parse response to JSON
+        data = response.json()
+        # Return channel list
+        return data.get("channels", [])
+
+    except RequestException:
+        print("Slack request error")
+        return None
+
+
+if __name__ == "__main__":
+    main()
