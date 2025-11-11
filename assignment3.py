@@ -2,7 +2,8 @@
 CP5632 Assignment 3 - Slack & GitHub API Tool
 Program Overview:
   A Python program that demonstrates the use of two APIs:
-  1. Slack API (conversations.list + auth.test): Fetch workspace name and channel list.
+  1. Slack API (conversations.list + auth.test):
+  Fetch workspace name and channel list.
   2. GitHub API (search/repositories): Search public repositories by keywords.
 Instructions:
   1. Create tokens.txt in project root (see README.md for format).
@@ -70,7 +71,8 @@ def main():
 
 
 def read_tokens_from_file(file_path):
-    """Read the API Token from the configuration file, skipping blank lines and comments"""
+    """Read the API Token from the configuration file,
+     skipping blank lines and comments"""
     tokens = {"GITHUB_TOKEN": "", "SLACK_BEARER_TOKEN": ""}
 
     try:
@@ -111,7 +113,8 @@ def search_github_repository(query, per_page=3):
     headers = {"Authorization": f"token {GITHUB_TOKEN}"}
 
     try:
-        response = requests.get(github_url, headers=headers, params=params, timeout=10)
+        response = requests.get(github_url, headers=headers,
+                                params=params, timeout=10)
         repository_data = response.json()
 
         # Filter needed repository info
@@ -120,7 +123,8 @@ def search_github_repository(query, per_page=3):
             repository_information = {
                 "name": repository["name"],
                 "stargazers_count": repository["stargazers_count"],
-                "description": repository.get("description", "No description available"),
+                "description": repository.get("description",
+                                              "No description available"),
                 "url": repository["html_url"],
                 "language": repository.get("language", "Unknown")
             }
@@ -157,7 +161,8 @@ def get_slack_workspace_name():
 def get_slack_channels(limit=10):
     """Get Slack channel list via conversations.list API"""
     headers = {"Authorization": f"Bearer {SLACK_BEARER_TOKEN}"}
-    params = {"types": "public_channel,private_channel", "limit": limit, "exclude_archived": True}
+    params = {"types": "public_channel,private_channel",
+              "limit": limit, "exclude_archived": True}
 
     try:
         # Send GET request to Slack API
